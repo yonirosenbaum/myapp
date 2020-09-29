@@ -1,19 +1,22 @@
 import React from "react";
 
 const returnRepeatStrings = ({ stringArray }) => {
-  let validStrings = [];
-  stringArray.filter((string) => {
+  let validString = [];
+  stringArray.filter((string, index) => {
     const splitString = string.split("");
-    console.log(splitString);
-    splitString.filter((character, index) => {
-      if (index !== 0 && character[index] !== character[0]) {
-        console.log(character, "chacrater different");
+    for (let i = 0; i < splitString.length - 1; i++) {
+      let prevCharactersEquals = 0;
+      if (splitString[i + 1] !== splitString[i]) {
+        break;
       }
-      return;
-    });
+      console.log(i, string);
+      console.log(splitString.length);
+      if (i == splitString.length - 2) {
+        validString.push(splitString.join(""));
+      }
+    }
   });
-  console.log(validStrings);
-  return validStrings;
+  console.log(validString);
 };
 
 export default returnRepeatStrings;
