@@ -36,3 +36,13 @@
     transform: rotate(360deg);
   }
 }
+body {
+  margin: 0;
+  padding: 0;
+  background: darkgrey;
+}
+@media only screen and (max-width: 550px) {
+  nav {
+    display: none;
+  }
+}

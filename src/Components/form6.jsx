@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { connect } from "react-redux";
+import { addAnswer } from "../Store/actions";
 
 const FormWrapper = styled.div`
   width: 100vw;
@@ -8,6 +10,7 @@ const FormWrapper = styled.div`
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
+  border-bottom: 2px solid darkgrey;
 `;
 
 const AboutText = styled.div`
@@ -63,9 +66,36 @@ const Result = styled.div`
 const StringLi = styled.div`
   display: flex;
 `;
+const AddAnswerButton = styled.button`
+  border: 1px solid white;
+  background: red;
+  color: white;
+  width: 140px;
+  font-weight: 700;
+  margin-top: 20px;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.8;
+    box-shadow: 0px 0px 2px 4px red;
+  }
+`;
+const AnswersContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const AnswersHeading = styled.p`
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-align: center;
+`;
+const AnswersList = styled.ul`
+  list-style: none;
+  text-align: center;
+  padding-left: 0;
+  margin-top: 0;
+`;
 
 const returnRepeatStrings = (stringArray) => {
-  console.log(stringArray);
   let validString = [];
   if (stringArray) {
     stringArray.filter((string, index) => {
@@ -80,7 +110,6 @@ const returnRepeatStrings = (stringArray) => {
         }
       }
     });
-    console.log(validString);
   }
   const mappedStrings = validString.map((string) => {
     return <StringLi>{string}</StringLi>;
@@ -88,12 +117,25 @@ const returnRepeatStrings = (stringArray) => {
   return mappedStrings;
 };
 
-const FormDisplay = () => {
+const FormDisplay = ({ addAnswer, answers }) => {
   const [valueA, setValueA] = useState("");
   const [valueB, setValueB] = useState("");
   const [valueC, setValueC] = useState("");
+  const [updateAnswers, setUpdateAnswers] = useState(false);
+  const handleDispatchAction = () => {
+    const list = document.querySelector("#result6");
+    if (list.children[0]) {
+      addAnswer(5, list.children[0].textContent);
+    }
+    if (list.children[1]) {
+      addAnswer(5, list.children[1].textContent);
+    }
+    if (list.children[2]) {
+      addAnswer(5, list.children[2].textContent);
+    }
+  };
   return (
-    <FormWrapper>
+    <FormWrapper id="Question 6">
       <AboutText>
         <Heading>Filter Repeating Character Strings?</Heading>
         <Text>
@@ -128,10 +170,36 @@ const FormDisplay = () => {
         </InputWrapper>
       </InputsWrapper>
       <ResultContainer>
-        Result: <Result>{returnRepeatStrings([valueA, valueB, valueC])}</Result>
+        Result:{" "}
+        <Result id="result6">
+          {returnRepeatStrings([valueA, valueB, valueC])}
+        </Result>
       </ResultContainer>
+      <div
+        onClick={() => {
+          setUpdateAnswers(!updateAnswers);
+        }}
+      >
+        <AddAnswerButton onClick={() => handleDispatchAction()}>
+          Add Answer To Redux Store
+        </AddAnswerButton>
+      </div>
+      <AnswersContainer>
+        <AnswersHeading>Past Answers</AnswersHeading>
+        <AnswersList>
+          {answers.map((list, index) => {
+            return <li key={index}>{list}</li>;
+          })}
+        </AnswersList>
+      </AnswersContainer>
     </FormWrapper>
   );
 };
 
-export default FormDisplay;
+const mapStateToProps = (state) => {
+  return {
+    answers: state.answers[5],
+  };
+};
+
+export default connect(mapStateToProps, { addAnswer })(FormDisplay);
